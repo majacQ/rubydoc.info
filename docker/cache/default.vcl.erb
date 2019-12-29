@@ -12,8 +12,10 @@ backend server<%= idx %> {
 <% end %>
 
 acl purge {
-  "app";
   "localhost";
+<% @backends.each.with_index do |ip, idx| %>
+  "<%= ip %>";
+<% end %>
 }
 
 sub vcl_init {
@@ -31,36 +33,26 @@ sub vcl_recv {
     return (pass); // don't cache process pages
   }
 
-  if (req.url ~ "github\/Homebrew\/homebrew" || req.url ~ "github\/Homebrew\/legacy-homebrew") {
-    return (synth(750, "https://rubydoc.info/github/Homebrew/brew"));
-  }
-
   if (req.method == "PURGE") {
     if (!client.ip ~ purge) {
       return(synth(405, "Not allowed."));
     }
     return (purge);
   }
+  if (req.method != "GET") {
+    return (pass);
+  }
 
   set req.backend_hint = cluster.backend();
-}
 
-sub vcl_synth {
-  if (resp.status == 750) {
-    set resp.http.Location = resp.reason;
-    set resp.status = 301;
-    return(deliver);
-  }
+  return (hash);
 }
 
 sub vcl_backend_response {
-  if (beresp.status != 200 || beresp.http.cache-control ~ "max-age=0") {
-    set beresp.uncacheable = true;
-    return (deliver); // no cache on non-200s
+  if (beresp.status != 200) {
+    set beresp.ttl = 0s;
   } else {
-    // one year cache
-    set beresp.ttl = 365d;
-    set beresp.do_esi = true;
+    set beresp.ttl = 1d;
   }
   return (deliver);
 }
@@ -74,6 +66,9 @@ sub vcl_deliver {
 }
 
 sub vcl_backend_error {
+  if (bereq.retries < 5) {
+    return (retry);
+  }
   set beresp.http.Content-Type = "text/html; charset=utf-8";
   synthetic({"
     <!DOCTYPE html>
@@ -86,5 +81,5 @@ sub vcl_backend_error {
         </body>
       </html>
     "});
-    return (deliver);
+  return (deliver);
 }
