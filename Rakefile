@@ -82,15 +82,19 @@ namespace :stdlib do
   end
 end
 
-namespace :docker do
-  desc 'Builds documentation for SOURCE in an isolated Docker container'
-  task :doc do
-    source_path = ENV['SOURCE']
-    host_path_file = File.join(__dir__, 'data', 'host_path')
-    if File.exist?(host_path_file)
-      source_path = source_path.sub(/\A\/app/, File.read(host_path_file).strip)
-    end
+namespace :app do
+  desc 'Builds documentation for SOURCE (in an isolated Docker container if DOCKERIZED is set)'
+  task :docparse do
+    unless ENV['DOCKERIZED']
+      require_relative './docker/docparse/generate'
+    else
+      source_path = ENV['SOURCE']
+      host_path_file = File.join(__dir__, 'data', 'host_path')
+      if File.exist?(host_path_file)
+        source_path = source_path.sub(/\A\/app/, File.read(host_path_file).strip)
+      end
 
-    sh "docker run --rm -v #{source_path.inspect}:/build 127.0.0.1:5000/rubydoc-docparse"
+      sh "docker run --rm -v #{source_path.inspect}:/build 127.0.0.1:5000/rubydoc-docparse"
+    end
   end
 end

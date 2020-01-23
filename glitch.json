@@ -1,0 +1,3 @@
+{
+  "start": "bundle install && bundle exec server:start PORT=3000"
+}

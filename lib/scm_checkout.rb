@@ -113,7 +113,7 @@ class GithubCheckout < ScmCheckout
 
   def checkout_command
     root_path = File.expand_path(File.join(settings.repos, '..', '..'))
-    "#{git_checkout_command} && cd #{root_path.inspect} && bundle exec rake docker:doc SOURCE=#{repository_path.inspect}"
+    "#{git_checkout_command} && cd #{root_path.inspect} && bundle exec rake app:docparse SOURCE=#{repository_path.inspect}"
   end
 
   def clear_source_files
