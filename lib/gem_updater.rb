@@ -49,20 +49,14 @@ class GemUpdater
       store = GemStore.new
       changed_gems = {}
       removed_gems = []
-      RemoteGem.all.each do |row|
-        changed_gems[row.name] = row.versions.split(' ')
-      end
 
       RemoteGem.db.transaction do
         libs.each do |name, versions|
           versions = pick_best_versions(versions)
-          if changed_gems[name] && changed_gems[name].size == versions.size
-            changed_gems.delete(name)
-          elsif changed_gems[name]
+          local_versions = store[name]
+          if local_versions.nil? || local_versions.size != versions.size
             store[name] = versions
-          else
-            RemoteGem.create(name: name,
-              versions: VersionSorter.sort(versions).join(" "))
+            changed_gems[name] = true
           end
         end
       end

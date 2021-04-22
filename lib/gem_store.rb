@@ -2,18 +2,18 @@ require 'sequel'
 require 'base64'
 require 'version_sorter'
 require_relative 'extensions'
+require_relative 'db'
 
-GEM_STORE_DB = Sequel.sqlite(REMOTE_GEMS_FILE)
-unless GEM_STORE_DB.table_exists?(:remote_gems)
-  GEM_STORE_DB.create_table(:remote_gems) do
-    primary_key :id
-    string :name
-    text :versions
-    index :name
+unless DB.table_exists?(:remote_gems)
+  DB.create_table(:remote_gems) do
+    String :name, primary_key: true
+    String :versions
   end
 end
 
-class RemoteGem < Sequel::Model; end
+class RemoteGem < Sequel::Model(DB); end
+
+RemoteGem.unrestrict_primary_key
 
 class GemStore
   PER_PAGE = 100
@@ -25,10 +25,13 @@ class GemStore
     versions = versions.split(' ') if versions.is_a?(String)
     versions = versions.map {|v| v.is_a?(YARD::Server::LibraryVersion) ? v.version : v }
     versions = VersionSorter.sort(versions)
-    if RemoteGem.where(name: name).count > 0
-      RemoteGem.first(name: name).update(versions: versions.join(" "))
-    else
-      RemoteGem.create(name: name, versions: versions.join(" "))
+    RemoteGem.db.transaction do
+      gem = RemoteGem.first(name: name)
+      if gem
+        gem.update(versions: versions.join(" "))
+      else
+        RemoteGem.create(name: name, versions: versions.join(" "))
+      end
     end
   rescue Sequel::DatabaseError => e
     puts "Database error when writing versions (locked?): #{e.message}"
@@ -50,7 +53,7 @@ class GemStore
   def each_of_letter(letter, page, &block)
     return enum_for(:each_of_letter, letter, page) unless block_given?
 
-    RemoteGem.where(Sequel.like(:name, "#{letter}%")).
+    RemoteGem.where(Sequel.like(:name, "#{letter}%")).order(:name).
         limit(PER_PAGE, (page - 1) * PER_PAGE).each do |row|
       yield row.name, to_versions(row)
     end
@@ -63,7 +66,7 @@ class GemStore
   def find_by(search, page)
     return enum_for(:find_by, search, page) unless block_given?
 
-    RemoteGem.where(Sequel.like(:name, "%#{search}%")).
+    RemoteGem.where(Sequel.like(:name, "%#{search}%")).order(:name).
         order { length(:name).asc }.
         limit(PER_PAGE, (page - 1) * PER_PAGE).each do |row|
       yield row.name, to_versions(row)

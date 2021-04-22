@@ -4,7 +4,6 @@ tmp
 repos
 data
 log
-recent.sqlite
 public/.htaccess
 public/sitemap.xml
 public/css/style.css

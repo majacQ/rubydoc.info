@@ -46,6 +46,7 @@ GEM
       ruby2_keywords (~> 0.0.1)
     net-http-persistent (2.9.4)
     nio4r (2.5.2)
+    pg (1.2.3)
     puma (4.3.5)
       nio4r (~> 2.0)
     rack (2.2.3)
@@ -115,6 +116,7 @@ DEPENDENCIES
   maruku
   memory_profiler
   net-http-persistent (~> 2.0)
+  pg
   puma
   rack-mini-profiler
   rack-test
@@ -136,4 +138,4 @@ DEPENDENCIES
   yard-sd
 
 BUNDLED WITH
-   2.1.2
+   2.1.4
