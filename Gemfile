@@ -32,8 +32,8 @@ end
 group :markup do
   gem 'rdoc'
   gem 'maruku'
-  gem 'kramdown'
-  gem 'redcarpet'
+  gem 'kramdown', '>= 2.3.1'
+  gem 'redcarpet', '>= 3.5.1'
   gem 'github-markup'
   gem 'rdiscount'
   gem 'bluecloth'
