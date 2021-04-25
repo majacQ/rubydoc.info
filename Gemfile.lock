@@ -38,7 +38,8 @@ GEM
     i18n (1.8.2)
       concurrent-ruby (~> 1.0)
     json (2.3.0)
-    kramdown (2.1.0)
+    kramdown (2.3.1)
+      rexml
     maruku (0.7.3)
     memory_profiler (0.9.14)
     minitest (5.14.1)
@@ -59,7 +60,8 @@ GEM
     rake (13.0.1)
     rdiscount (2.2.0.1)
     rdoc (6.2.1)
-    redcarpet (3.5.0)
+    redcarpet (3.5.1)
+    rexml (3.2.5)
     rspec (3.9.0)
       rspec-core (~> 3.9.0)
       rspec-expectations (~> 3.9.0)
@@ -112,7 +114,7 @@ DEPENDENCIES
   flamegraph
   github-markup
   json
-  kramdown
+  kramdown (>= 2.3.1)
   maruku
   memory_profiler
   net-http-persistent (~> 2.0)
@@ -123,7 +125,7 @@ DEPENDENCIES
   rake
   rdiscount
   rdoc
-  redcarpet
+  redcarpet (>= 3.5.1)
   rspec
   sequel
   sinatra (>= 1.3)
