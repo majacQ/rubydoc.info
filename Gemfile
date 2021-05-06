@@ -30,7 +30,7 @@ group :yard do
 end
 
 group :markup do
-  gem 'rdoc'
+  gem 'rdoc', '>= 6.3.0'
   gem 'maruku'
   gem 'kramdown', '>= 2.3.1'
   gem 'redcarpet', '>= 3.5.1'
