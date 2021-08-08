@@ -1,4 +1,4 @@
-FROM alpine:3.10
+FROM alpine:3
 RUN apk add --no-cache -U varnish ruby docker
 COPY ./docker/cache/*.vcl /etc/varnish/
 RUN echo 'fs.file-max = 700000' >> /etc/sysctl.conf
