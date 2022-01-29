@@ -1,4 +1,4 @@
-FROM ruby:2.6-alpine
+FROM ruby:2.7.4-alpine
 
 ADD ./generate.rb /rb/generate.rb
 RUN chmod +x /rb/generate.rb
