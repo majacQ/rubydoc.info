@@ -19,7 +19,7 @@ group :instrumentation do
   gem 'memory_profiler', require: false
   gem 'flamegraph', require: false
   gem 'stackprof', require: false
-  gem 'rack-test', require: false
+  gem 'rack-test', '>= 2.0.0', require: false
 end
 
 group :yard do
@@ -42,7 +42,7 @@ group :markup do
 end
 
 group :framework do
-  gem 'sinatra', '>= 1.3'
+  gem 'sinatra', '>= 2.0.8.1'
   gem 'puma', '>= 4.3.8'
 end
 
