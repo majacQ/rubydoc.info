@@ -8,7 +8,7 @@ group :app do
   gem 'json'
   gem 'version_sorter'
   gem 'net-http-persistent', '~> 2.0'
-  gem 'activesupport'
+  gem 'activesupport', '>= 6.1.7.1'
   gem 'rake', require: false
 end
 
@@ -42,7 +42,7 @@ group :markup do
 end
 
 group :framework do
-  gem 'sinatra', '>= 1.3'
+  gem 'sinatra', '>= 2.0.8.1'
   gem 'puma', '>= 4.3.8'
 end
 
