@@ -8,7 +8,7 @@ group :app do
   gem 'json'
   gem 'version_sorter'
   gem 'net-http-persistent', '~> 2.0'
-  gem 'activesupport'
+  gem 'activesupport', '>= 6.1.7.3'
   gem 'rake', require: false
 end
 
@@ -19,7 +19,7 @@ group :instrumentation do
   gem 'memory_profiler', require: false
   gem 'flamegraph', require: false
   gem 'stackprof', require: false
-  gem 'rack-test', require: false
+  gem 'rack-test', '>= 2.0.0', require: false
 end
 
 group :yard do
@@ -30,7 +30,7 @@ group :yard do
 end
 
 group :markup do
-  gem 'rdoc'
+  gem 'rdoc', '>= 6.3.1'
   gem 'maruku'
   gem 'kramdown', '>= 2.3.1'
   gem 'redcarpet', '>= 3.5.1'
@@ -42,8 +42,8 @@ group :markup do
 end
 
 group :framework do
-  gem 'sinatra', '>= 1.3'
-  gem 'puma', '>= 4.3.8'
+  gem 'sinatra', '>= 2.2.3'
+  gem 'puma', '>= 5.6.4'
 end
 
 group :test do
